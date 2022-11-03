@@ -31,11 +31,11 @@ export default {
     return {
       baseLink: "https://accounts.spotify.com/authorize?",
       responseType: "code",
-      clientID: "667eff57860146d3ae566e2a103db343",
+      clientID: import.meta.env.VITE_CLIENT_ID,
       scopes:
         "playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public",
-      redirectURI:
-        "http://localhost:5173/playlists" /* adicionada no dashboard do spotify como confiável */,
+      redirectURI: import.meta.env
+        .VITE_REDIRECT_URI /* adicionada no dashboard do spotify como confiável */,
     };
   },
   methods: {
