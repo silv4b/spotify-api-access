@@ -1,5 +1,5 @@
 <template>
-  <router-view> </router-view>
+  <h2>Suas Playlists</h2>
 </template>
 
 <script>
