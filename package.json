@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "vue": "^3.2.41",
+    "vue-mobile-detection": "^2.0.1",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
