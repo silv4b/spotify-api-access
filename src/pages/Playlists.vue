@@ -1,16 +1,23 @@
 <template>
-  <h2>Suas Playlists</h2>
+  <h1>Suas Playlists</h1>
+  <br />
+  <h2>
+    Fala tu, <strong>{{ loggedUser.nome }}</strong>
+  </h2>
+  <h2>ID: {{ loggedUser.id }}</h2>
 </template>
 
 <script>
 import axios from "axios";
+
 export default {
-  data() {
+  data: () => {
     return {
-      url: import.meta.env.VITE_URL_TOKEN,
+      accessToken: undefined,
+      loggedUser: {},
     };
   },
-  mounted() {
+  async mounted() {
     const clientID = import.meta.env.VITE_CLIENT_ID;
     const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 
@@ -23,18 +30,47 @@ export default {
       redirect_uri: import.meta.env.VITE_REDIRECT_URI,
     };
 
-    console.table(body);
-
-    // request post
-    axios({
+    // recuperando o access token
+    let resposta = await axios({
       method: "POST",
-      url: import.meta.env.VITE_URL_TOKEN,
+      url: "https://accounts.spotify.com/api/token",
       data: new URLSearchParams(Object.entries(body)).toString(),
       headers: {
-        Authorization: `Basic ${btoa(clientID + ":" + clientSecret)}`,
         "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${btoa(clientID + ":" + clientSecret)}`,
       },
     });
+    this.accessToken = resposta.data.access_token;
+
+    // recuperar id do usuario
+    let respostaUsuario = await axios({
+      method: "GET",
+      url: "https://api.spotify.com/v1/me",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+    });
+
+    this.loggedUser = {
+      nome: respostaUsuario.data.display_name,
+      id: respostaUsuario.data.id,
+    };
+
+    // recuperar playlists do usuario logado
+    let respostaPlaylists = await axios({
+      method: "GET",
+      //url: `https://api.spotify.com/v1/me/playlists`,
+      url: `https://api.spotify.com/v1/users/${this.loggedUser.id}/playlists`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+    });
+    console.log(respostaPlaylists);
+    //console.log(respostaPlaylists.data.items[1].images[0].url);
+
+    // refresh token
   },
 };
 </script>
