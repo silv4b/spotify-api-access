@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // deve ser explícito, por hora, trocar apenas para commitar
-const clientID = import.meta.env.VITE_CLIENT_ID;
-const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
+const clientID = process.env.VITE_CLIENT_ID;
+const clientSecret = process.env.VITE_CLIENT_SECRET;
 
 let accessToken;
 
@@ -17,7 +17,7 @@ export default class SpotifyApi {
       code: code,
       //redirect_uri: import.meta.env.VITE_REDIRECT_URI,
       // deve ser explícito, por hora, trocar apenas para commitar
-      redirect_uri: import.meta.env.VITE_REDIRECT_URI,
+      redirect_uri: process.env.VITE_REDIRECT_URI_PLAYLISTS,
     };
 
     const resposta = await axios({

@@ -35,7 +35,6 @@
 export default {
   mounted() {
     this.isMobile = this.$isMobile();
-    //console.log(this.isMobile);
   },
   data: () => {
     return {
@@ -45,8 +44,8 @@ export default {
       clientID: import.meta.env.VITE_CLIENT_ID,
       scopes:
         "playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public",
-      redirectURI: import.meta.env
-        .VITE_REDIRECT_URI /* adicionada no dashboard do spotify como confiável */,
+      /* adicionada no dashboard do spotify como confiável */
+      redirectURI: import.meta.env.VITE_REDIRECT_URI_PLAYLISTS,
     };
   },
   methods: {
