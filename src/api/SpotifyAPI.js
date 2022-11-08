@@ -47,8 +47,9 @@ export default class SpotifyApi {
     });
 
     const loggedUser = {
-      nome: resposta.data.display_name,
       id: resposta.data.id,
+      nome: resposta.data.display_name,
+      profileLink: resposta.data.external_urls.spotify,
     };
 
     return loggedUser;
@@ -58,7 +59,7 @@ export default class SpotifyApi {
   static async getPlayLists(loggedUser) {
     const resposta = await axios({
       method: "GET",
-      //url: `https://api.spotify.com/v1/me/playlists`,
+      /*url: `https://api.spotify.com/v1/me/playlists`,*/
       url: `https://api.spotify.com/v1/users/${loggedUser.id}/playlists`,
       headers: {
         "Content-Type": "application/json",

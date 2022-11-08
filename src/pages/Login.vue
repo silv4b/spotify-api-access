@@ -33,9 +33,6 @@
 
 <script>
 export default {
-  mounted() {
-    this.isMobile = this.$isMobile();
-  },
   data: () => {
     return {
       isMobile: true,
@@ -47,6 +44,9 @@ export default {
       /* adicionada no dashboard do spotify como confiável */
       redirectURI: import.meta.env.VITE_REDIRECT_URI_PLAYLISTS,
     };
+  },
+  mounted() {
+    this.isMobile = this.$isMobile();
   },
   methods: {
     login() {
