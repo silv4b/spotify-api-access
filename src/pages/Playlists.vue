@@ -9,6 +9,15 @@
   </div>
   <nav class="py-8 px-8 text-white flex justify-between bg-zinc-900">
     <h1 class="text-2xl font-bold">Suas Playlists</h1>
+
+    <div>
+      <img
+        class="m-auto scale-[1.5] h-8"
+        src="./../assets/spotify-png.png"
+        alt="Logo Spotify"
+      />
+    </div>
+
     <div class="">
       <a v-bind:href="loggedUser.profileLink" target="_blank"
         ><span class="label label-danger">{{ loggedUser.nome }}</span></a
@@ -50,7 +59,7 @@ export default {
   },
   data: () => {
     return {
-      accessToken: undefined,
+      //accessToken: undefined,
       loggedUser: {},
       playlists: [],
       isLoading: true,
@@ -62,7 +71,7 @@ export default {
     let code = params.get("code");
 
     // recuperando o access token
-    this.accessToken = await SpotifyApi.getToken(code);
+    await SpotifyApi.getToken(code);
 
     // recuperar id e link de perfil do usuario
     this.loggedUser = await SpotifyApi.getUser();

@@ -5,12 +5,21 @@ const clientID = process.env.VITE_CLIENT_ID;
 const clientSecret = process.env.VITE_CLIENT_SECRET;
 
 let accessToken;
+let refreshToken;
+let expiresIn;
+let tokenExpirado = false;
 
 export default class SpotifyApi {
 
   // recuperando o access token.
   // método statíco, não necessitando da criação de uma instância de SpotifyApi para que seja usado.
   static async getToken(code) {
+
+    if (tokenExpirado) {
+      console.log("Gerando token ...");
+      await SpotifyApi.refreshToken();
+      console.log(accessToken);
+    }
 
     const body = {
       grant_type: "authorization_code",
@@ -22,7 +31,7 @@ export default class SpotifyApi {
 
     const resposta = await axios({
       method: "POST",
-      url: "https://accounts.spotify.com/api/token",
+      url: process.env.VITE_URL_TOKEN,
       data: new URLSearchParams(Object.entries(body)).toString(),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -30,8 +39,43 @@ export default class SpotifyApi {
       },
     });
 
-    accessToken = resposta.data.access_token;
-    return resposta.data.access_token;
+    accessToken = resposta.data.access_token; // será usado no refresh token
+    expiresIn = resposta.data.expires_in; // será usado no refresh token
+    refreshToken = resposta.data.refresh_token;
+    tokenExpirado = false;
+
+    setTimeout(() => {
+      tokenExpirado = true;
+      SpotifyApi.refreshToken();
+    }, expiresIn);
+  }
+
+  // recupera refresh token
+  static async refreshToken() {
+
+    const body = {
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+    };
+
+    const resposta = await axios({
+      method: "POST",
+      url: process.env.VITE_URL_TOKEN,
+      data: new URLSearchParams(Object.entries(body)).toString(),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${btoa(clientID + ":" + clientSecret)}`,
+      },
+    });
+
+    refreshToken = resposta.data.access_token;
+    expiresIn = resposta.data.expires_in;
+    tokenExpirado = false;
+
+    setTimeout(() => {
+      tokenExpirado = true;
+      SpotifyApi.refreshToken();
+    }, expiresIn);
   }
 
   // recuperar id do usuario
@@ -57,6 +101,11 @@ export default class SpotifyApi {
 
   // recuperar playlists do usuario logado
   static async getPlayLists(loggedUser) {
+
+    if (tokenExpirado) {
+      await SpotifyApi.refreshToken();
+    }
+
     const resposta = await axios({
       method: "GET",
       /*url: `https://api.spotify.com/v1/me/playlists`,*/
