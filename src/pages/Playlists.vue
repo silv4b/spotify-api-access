@@ -3,7 +3,6 @@
     <Loading
       v-model:active="isLoading"
       :can-cancel="false"
-      :on-cancel="onCancel"
       :is-full-page="fullPage"
     />
   </div>
@@ -59,7 +58,6 @@ export default {
   },
   data: () => {
     return {
-      //accessToken: undefined,
       loggedUser: {},
       playlists: [],
       isLoading: true,
@@ -79,8 +77,6 @@ export default {
     // recuperar playlists do usuario logado
     this.playlists = await SpotifyApi.getPlayLists(this.loggedUser);
 
-    // refresh token
-
     // loading overlay
     this.isLoading = false;
     //this.doAjax();
@@ -90,14 +86,10 @@ export default {
       this.$router.push("/");
     },
     doAjax() {
-      // this.isLoading = true;
       setTimeout(() => {
         this.isLoading = false;
         console.log("Aqui");
       }, 3000);
-    },
-    onCancel() {
-      console.log("User cancelled the loader.");
     },
   },
 };

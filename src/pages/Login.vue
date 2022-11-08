@@ -36,13 +36,13 @@ export default {
   data: () => {
     return {
       isMobile: true,
-      baseLink: import.meta.env.VITE_URL_AUTHORIZE,
       responseType: "code",
+      /* adicionada no dashboard do spotify como confiável */
+      redirectURI: import.meta.env.VITE_REDIRECT_URI_PLAYLISTS,
+      baseLink: import.meta.env.VITE_URL_AUTHORIZE,
       clientID: import.meta.env.VITE_CLIENT_ID,
       scopes:
         "playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public",
-      /* adicionada no dashboard do spotify como confiável */
-      redirectURI: import.meta.env.VITE_REDIRECT_URI_PLAYLISTS,
     };
   },
   mounted() {
